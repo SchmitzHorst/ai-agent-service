@@ -1,0 +1,158 @@
+# Agent Service - Git Ignore
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Java
+*.class
+*.log
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# IDE - Eclipse
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+# IDE - VS Code
+.vscode/
+.code-workspace
+
+# IDE - NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# Python
+python/venv/
+python/__pycache__/
+python/*.pyc
+python/*.pyo
+python/*.pyd
+python/.Python
+python/env/
+python/ENV/
+python/build/
+python/develop-eggs/
+python/dist/
+python/downloads/
+python/eggs/
+python/.eggs/
+python/lib/
+python/lib64/
+python/parts/
+python/sdist/
+python/var/
+python/wheels/
+python/*.egg-info/
+python/.installed.cfg
+python/*.egg
+
+# Generated Apps (don't commit generated output)
+/generated-apps/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Secrets & Environment
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.p12
+*.jks
+application-local.yml
+application-dev.yml
+secrets/
+
+# SSH Keys
+*.rsa
+*.rsa.pub
+id_rsa*
+id_ed25519*
+known_hosts
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.#*
+\#*#
+
+# Package Files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Spring Boot
+spring-boot-devtools.properties
+
+# Documentation build
+/docs/_build/
+/docs/_static/
+/docs/_templates/
+
+# Test coverage
+/coverage/
+.nyc_output/
+*.lcov
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig

@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: agent-service
+
+anthropic:
+  api-key: ${ANTHROPIC_API_KEY}
+
+python:
+  script-path: ${user.home}/IdeaProjects/agent-service/python
+  venv-path: ${user.home}/IdeaProjects/agent-service/python/venv
+
+template:
+  repo-path: ${user.home}/IdeaProjects/spring-angular-hetzner-template
+
+output:
+  apps-path: ${user.home}/IdeaProjects/generated-apps
+
+deployment:
+  server:
+    host: ${DEPLOYMENT_SERVER_HOST:91.98.127.79}
+    user: ${DEPLOYMENT_SERVER_USER:root}
+    key-path: ${user.home}/.ssh/agent_deploy_rsa
+    target-dir: /opt/apps
+
+server:
+  port: 8081
+
