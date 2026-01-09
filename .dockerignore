@@ -1,0 +1,59 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+.project
+.classpath
+.settings/
+
+# Generated apps (will be mounted as volume)
+generated-apps/
+
+# Template (will be mounted as volume)
+spring-angular-hetzner-template/
+
+# Python
+python/venv/
+python/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# SSH Keys
+*.pem
+*.key
+*.rsa
+id_rsa*
+id_ed25519*
+
+# Documentation
+*.md
+docs/
+LESSONS_LEARNED.md
+CONTRIBUTING.md
+
+# Docker
+docker-compose.override.yml

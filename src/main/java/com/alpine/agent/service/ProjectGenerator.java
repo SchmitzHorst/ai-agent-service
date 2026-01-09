@@ -220,6 +220,33 @@ public class ProjectGenerator {
 
         prompt.append("Include empty constructor and getters/setters for all fields. ");
         prompt.append("Only return the complete Java code, no explanations, no markdown.");
+        prompt.append("TIMESTAMP FIELDS (IMPORTANT):\n");
+        prompt.append("If you decide to add audit fields like createdAt or updatedAt:\n");
+        prompt.append("1. They MUST be LocalDateTime type\n");
+        prompt.append("2. They MUST NOT be nullable\n");
+        prompt.append("3. You MUST include JPA lifecycle callbacks to auto-set them:\n\n");
+
+        prompt.append("Example:\n");
+        prompt.append("```java\n");
+        prompt.append("@Column(nullable = false)\n");
+        prompt.append("private LocalDateTime createdAt;\n\n");
+
+        prompt.append("@Column(nullable = false)\n");
+        prompt.append("private LocalDateTime updatedAt;\n\n");
+
+        prompt.append("@PrePersist\n");
+        prompt.append("protected void onCreate() {\n");
+        prompt.append("    createdAt = LocalDateTime.now();\n");
+        prompt.append("    updatedAt = LocalDateTime.now();\n");
+        prompt.append("}\n\n");
+
+        prompt.append("@PreUpdate\n");
+        prompt.append("protected void onUpdate() {\n");
+        prompt.append("    updatedAt = LocalDateTime.now();\n");
+        prompt.append("}\n");
+        prompt.append("```\n\n");
+
+        prompt.append("CRITICAL: Without @PrePersist and @PreUpdate, the timestamps will be null and cause database errors!\n\n");
 
         return prompt.toString();
     }

@@ -1,0 +1,110 @@
+services:
+  # Backend API Service
+  agent-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agent-service:latest
+    container_name: agent-service
+    restart: unless-stopped
+
+    environment:
+      # Anthropic API
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # Paths (inside container)
+      - PYTHON_SCRIPT_PATH=/app/python
+      - PYTHON_VENV_PATH=/app/python/venv
+      - TEMPLATE_REPO_PATH=/app/template
+      - OUTPUT_APPS_PATH=/app/generated-apps
+
+      # Deployment configuration
+      - DEPLOYMENT_SERVER_HOST=localhost
+      - DEPLOYMENT_SERVER_USER=root
+      - DEPLOYMENT_SERVER_KEY_PATH=/app/keys/deploy_key
+      - DEPLOYMENT_SERVER_TARGET_DIR=/opt/apps
+
+      # Server configuration
+      - SERVER_PORT=8081
+      - SPRING_PROFILES_ACTIVE=prod
+
+    volumes:
+      # Generated apps (persistent)
+      - ./generated-apps:/app/generated-apps
+
+      # Template repository (read-only)
+      - ./spring-angular-hetzner-template:/app/template:ro
+
+      # SSH key for deployment (read-only)
+      - ~/.ssh/agent_deploy_rsa:/app/keys/deploy_key:ro
+
+      # Docker socket for deployment (if deploying on same host)
+      - /var/run/docker.sock:/var/run/docker.sock
+
+    networks:
+      - spring-angular-app_app-network
+
+    labels:
+      # Traefik configuration for API
+      - 'traefik.enable=true'
+
+      # API router (only /api/* paths)
+      - 'traefik.http.routers.agent-api.rule=Host(`agent.ai-alpine.ch`) && PathPrefix(`/api`)'
+      - 'traefik.http.routers.agent-api.entrypoints=websecure'
+      - 'traefik.http.routers.agent-api.tls.certresolver=letsencrypt'
+
+      # Service
+      - 'traefik.http.services.agent-api.loadbalancer.server.port=8081'
+
+      # CORS middleware
+      - 'traefik.http.middlewares.agent-cors.headers.accesscontrolallowmethods=GET,POST,OPTIONS'
+      - 'traefik.http.middlewares.agent-cors.headers.accesscontrolalloworiginlist=*'
+      - 'traefik.http.middlewares.agent-cors.headers.accesscontrolallowheaders=Content-Type'
+      - 'traefik.http.routers.agent-api.middlewares=agent-cors'
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/api/agent/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Frontend UI Service (nginx)
+  agent-ui:
+    image: nginx:alpine
+    container_name: agent-ui
+    restart: unless-stopped
+
+    volumes:
+      # Static HTML files
+      - ./ui:/usr/share/nginx/html:ro
+
+      # Custom nginx config (optional)
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    networks:
+      - spring-angular-app_app-network
+
+    labels:
+      # Traefik configuration for UI
+      - 'traefik.enable=true'
+
+      # UI router (root path and all non-api paths)
+      - 'traefik.http.routers.agent-ui.rule=Host(`agent.ai-alpine.ch`)'
+      - 'traefik.http.routers.agent-ui.entrypoints=websecure'
+      - 'traefik.http.routers.agent-ui.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.agent-ui.priority=1'
+
+      # Service
+      - 'traefik.http.services.agent-ui.loadbalancer.server.port=80'
+
+      # Compression middleware
+      - 'traefik.http.middlewares.agent-compress.compress=true'
+      - 'traefik.http.routers.agent-ui.middlewares=agent-compress'
+
+    # Healthcheck removed - nginx:alpine doesn't have wget/curl
+    # Container works fine without it, Traefik will check directly
+
+networks:
+  spring-angular-app_app-network:
+    external: true
